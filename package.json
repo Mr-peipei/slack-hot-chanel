@@ -1,0 +1,23 @@
+{
+  "name": "bolt",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/app.js",
+  "scripts": {
+    "build": "tsc -p .",
+    "build:watch": "tsc -w -p .",
+    "start": "npm run build && node dist/app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/luxon": "^3.3.0",
+    "@types/node": "^20.2.1",
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "@slack/bolt": "^3.13.1",
+    "luxon": "^3.3.0"
+  }
+}
