@@ -22,13 +22,22 @@ export const app = new App({
 const main = async () => {
   const result: Channel[] = await getChannels();
 
+  const yesterday = DateTime.local().setZone(TIME_ZONE).minus({ days: 1 });
+
+  const yesterDayStart = yesterday.startOf("day").toSeconds().toString();
+  const yesterDayEnd = yesterday.endOf("day").toSeconds().toString();
+
   const channels: (Channel | undefined)[] = await Promise.all(
     result.map(async (channel) => {
       if (channel.id === undefined) {
         return;
       }
       try {
-        const message = await getChannelMessage(channel.id);
+        const message = await getChannelMessage(
+          channel.id,
+          yesterDayStart,
+          yesterDayEnd
+        );
         return { id: channel.id, name: channel.name, count: message.length };
       } catch (error) {
         return;
@@ -45,14 +54,12 @@ const main = async () => {
   const counts: number = sumOfCount(filteredChannel);
   const fields: AttachmentField[] = channelToFields(sortedChannels);
 
-  const today: string = DateTime.local()
-    .setZone(TIME_ZONE)
-    .toFormat("yyyy年MM月dd日");
-
   await postMessage({
-    attachmentTitle: today + "の発言数ランキング",
+    attachmentTitle:
+      yesterday.toFormat("yyyy年MM月dd日") + "の発言数ランキング",
     attachmentText: "合計発言数: " + counts.toString(),
     attachmentFields: fields,
   });
 };
+
 main();

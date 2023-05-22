@@ -1,5 +1,5 @@
 import { app } from "./app";
-import { AttachmentField, Channel, Message, PostData } from "./domain";
+import { Channel, Message, PostData } from "./domain";
 import {
   POST_AUTHOR_NAME,
   POST_CHANNEL_ID,
@@ -22,12 +22,16 @@ export const getChannels = async (): Promise<Channel[]> => {
 };
 
 export const getChannelMessage = async (
-  channelId: string
+  channelId: string,
+  oldest: string,
+  latest: string
 ): Promise<Message[]> => {
   try {
     const result = await app.client.conversations.history({
       token: SLACK_BOT_TOKEN,
       channel: channelId,
+      oldest: oldest,
+      latest: latest,
     });
     if (result.messages === undefined) {
       return [];
